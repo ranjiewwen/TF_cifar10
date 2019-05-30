@@ -17,7 +17,6 @@
 - seven step: you can also get some extra information from `demo/visual.py` such as weights or visual feature map.
 - other: you can fimilar how to use some tool function in `tools/utils.py`.
 
-### How to Use
 
 ## Reference
 
