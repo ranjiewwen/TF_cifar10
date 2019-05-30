@@ -1,0 +1,15 @@
+{
+  "exp_name": "cifar10",
+  "lr": 0.001,
+  "decay": 0.0,
+  "num_epochs": 60,
+  "max_iter":48000,
+  "batch_size": 128,
+  "num_classes":10,
+  "im_shape":[32,32],
+  "max_to_keep":10,
+  "keep_prob":0.5,
+  "trian_display_step":100,
+  "train_txt":"F:\\dataset\\cifar10\\train.txt",
+  "val_txt":"F:\\dataset\\cifar10\\val.txt"
+}

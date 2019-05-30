@@ -1,0 +1,9 @@
+['automobile', 'truck', 'bird', 'horse', 'frog', 'cat', 'dog', 'airplane', 'ship', 'deer']
+
+
+F:\dataset\cifar10\train\25423.png 7
+F:\dataset\cifar10\train\29087.png 9
+F:\dataset\cifar10\train\25295.png 4
+F:\dataset\cifar10\train\11093.png 9
+F:\dataset\cifar10\train\43187.png 0
+F:\dataset\cifar10\train\2808.png 3
