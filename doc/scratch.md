@@ -1,7 +1,7 @@
 
 ## optimization process
 
-- adjust learning rate
+### adjust learning rate
 
 - exp1: learning rate exp_decay, note `decay_steps` sets.
 - exp2: learning rate piecewise_constant sets.
@@ -25,7 +25,17 @@ def get_lr_strategy(config,global_step):
     return learning_rate
 ```
 
-- data augmentation
+### experiments results:
+
+- tensorboard visual learning rate.
+
+![](https://github.com/ranjiewwen/TF_cifar10/blob/master/doc/image/lr.png)
+
+-  tensorboard visual val accuracy.
+
+![](https://github.com/ranjiewwen/TF_cifar10/blob/master/doc/image/lr_acc.png)
+
+### data augmentation
 
 ```
 def parse_aug_data(filename):
