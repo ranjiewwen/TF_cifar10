@@ -21,12 +21,34 @@ def parse_data(filename):
 
     return I
 
+# https://feelncut.com/2018/09/11/182.html
+def add_gasuss_noise(image, mean=0, var=0.001):
+    '''
+        mean : 均值
+        var : 方差
+    '''
+    image = np.array(image/255, dtype=float)
+    noise = np.random.normal(mean, var ** 0.5, image.shape)
+    out = image + noise
+    if out.min() < 0:
+        low_clip = -1.
+    else:
+        low_clip = 0.
+    out = np.clip(out, low_clip, 1.0)
+    out = np.uint8(out*255)
+    return out
+
 def parse_aug_data(filename):
 
     I = np.asarray(cv2.imread(filename))
     I = I.astype(np.float32)
     mean = np.array([113.86538318359375,122.950394140625,125.306918046875])
     I -= mean
+
+    if np.random.random() < 0.5 :
+        I = cv2.flip(I,1)
+    if np.random.random() < 0.5 :
+        I = cv2.GaussianBlur(I, (3,3), 0.5)
 
     return I
 

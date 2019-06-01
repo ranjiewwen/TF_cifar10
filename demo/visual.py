@@ -109,6 +109,7 @@ def main(args,config):
         plt.show()
 
         ## print gradients :https://zhuanlan.zhihu.com/p/29664551
+        ## Going deeper into Tensorboard; visualize the variables, gradients: https://github.com/aymericdamien/TensorFlow-Examples/blob/master/examples/4_Utils/tensorboard_advanced.py
 
 
 

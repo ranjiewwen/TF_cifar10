@@ -11,8 +11,13 @@ from src.loss.cross_entropy import cross_entropy
 from src.metrics.acc_metric import get_accuracy
 from tools.utils import setup_logger
 from tools.utils import get_args,create_dirs
+from tools.lr_opti_strategy import get_lr_strategy
 from config.config import process_config
 import numpy as np
+from datetime import datetime
+import time
+
+
 
 def main(config):
     graph = tf.Graph()
@@ -37,15 +42,25 @@ def main(config):
         tf.summary.scalar('cross_entropy',loss)
 
         with tf.name_scope("trian"):
-            train_step = tf.train.AdamOptimizer(config.lr).minimize(loss)
+            global_step = tf.Variable(0, trainable=False)  # global_step变量是不可训练的,参考：https://blog.csdn.net/xiaolifeidaoer/article/details/88218224
+            learning_rate = get_lr_strategy(config,global_step)
+            if config.optimize == "sgd":
+                train_step = tf.train.GradientDescentOptimizer(learning_rate).minimize(loss,global_step=global_step)
+            else:
+                train_step = tf.train.AdamOptimizer(learning_rate).minimize(loss,global_step=global_step)
+        tf.summary.scalar('learning_rate', learning_rate)
+        tf.summary.scalar('global_step', global_step)
 
         with tf.name_scope("accuracy"):
             accuracy = get_accuracy(prediction,y)
         tf.summary.scalar('accuracy', accuracy)
 
         summary_op = tf.summary.merge_all()
-        train_writer = tf.summary.FileWriter(config.summary_dir + '/train')
-        val_writer = tf.summary.FileWriter(config.summary_dir + '/test')
+        # Instantiate a SummaryWriter to output summaries and the Graph.
+        timestamp = datetime.fromtimestamp(time.time()).strftime('%Y%m%d_%H-%M')
+        train_writer = tf.summary.FileWriter(config.summary_dir+'/train/'+'{}_{}'.format(config.exp_name, timestamp),filename_suffix=config.exp_name)
+        val_writer = tf.summary.FileWriter(config.summary_dir+'/test/'+'{}_{}'.format(config.exp_name, timestamp),filename_suffix=config.exp_name)
+
         model.init_saver()
 
     train_step_per_epoch = np.floor(len(train_dataloader.images_paths)/config.batch_size).astype(np.int16)

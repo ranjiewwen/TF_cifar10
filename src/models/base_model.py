@@ -16,7 +16,7 @@ class BaseModel:
 
     # save function that saves the checkpoint in the path defined in the config file
     def save(self, sess, step):
-        print("----------Saving model...")
+        print("-----------Saving model...")
         self.saver.save(sess, os.path.join(self.config.ckpt_dir,"iteration_"+str(step)+".ckpt"), step ,write_meta_graph = False)
 
     # load latest checkpoint from the experiment path defined in the config file
