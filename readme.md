@@ -19,7 +19,7 @@
 
 ## The optimization process
 
-- The detailed information you can get from there.
+- The detailed information you can get from [there](https://github.com/ranjiewwen/TF_cifar10/blob/master/doc/scratch.md).
 
 ## Reference
 
