@@ -11,23 +11,13 @@ import cv2
 # 同级目录引用
 from src.datasets.base_dataloader import DataLoaderBase
 
-
-def parse_data(filename):
-
-    I = np.asarray(cv2.imread(filename))
-    I = I.astype(np.float32)
-    mean = np.array([113.86538318359375,122.950394140625,125.306918046875])
-    I -= mean
-
-    return I
-
 # https://feelncut.com/2018/09/11/182.html
 def add_gasuss_noise(image, mean=0, var=0.001):
     '''
         mean : 均值
         var : 方差
     '''
-    image = np.array(image/255, dtype=float)
+    image = np.array(image, dtype=float)
     noise = np.random.normal(mean, var ** 0.5, image.shape)
     out = image + noise
     if out.min() < 0:
@@ -35,20 +25,42 @@ def add_gasuss_noise(image, mean=0, var=0.001):
     else:
         low_clip = 0.
     out = np.clip(out, low_clip, 1.0)
-    out = np.uint8(out*255)
+
     return out
+
+def image_whitening(image):
+
+    mean = np.mean(image)
+    std = np.max([np.std(image),1.0/np.sqrt(image.shape[0]*image.shape[1]*image.shape[2])])
+    white_image = (image-mean)/std
+
+    return white_image
+
+def parse_data(filename):
+
+    I = np.asarray(cv2.imread(filename))
+    I = I.astype(np.float32)
+    # mean = np.array([113.86538318359375,122.950394140625,125.306918046875])
+    # I -= mean
+    I = image_whitening(I)
+
+    return I
 
 def parse_aug_data(filename):
 
     I = np.asarray(cv2.imread(filename))
     I = I.astype(np.float32)
-    mean = np.array([113.86538318359375,122.950394140625,125.306918046875])
-    I -= mean
+
+    # mean = np.array([113.86538318359375,122.950394140625,125.306918046875])
+    # I -= mean
+    I = image_whitening(I)
 
     if np.random.random() < 0.5 :
         I = cv2.flip(I,1)
     if np.random.random() < 0.5 :
         I = cv2.GaussianBlur(I, (3,3), 0.5)
+    if np.random.random() < 0.5:
+        I = add_gasuss_noise(I)
 
     return I
 
