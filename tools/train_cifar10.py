@@ -18,7 +18,6 @@ from datetime import datetime
 import time
 
 
-
 def main(config):
     graph = tf.Graph()
     with graph.as_default():

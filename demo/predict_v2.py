@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 """
-created by admin at  2019-05-27  in Whu.
+created by admin at  2019-06-04  in Whu.
 """
 
 import matplotlib.pyplot as plt
@@ -9,7 +9,7 @@ import tensorflow as tf
 import numpy as np
 import cv2
 from config.config import process_config
-from src.models.simple_model import SimpleModel
+from src.models.model_v2 import SimpleModel
 
 import argparse
 def str2bool(v):
@@ -27,8 +27,8 @@ def process_args():
     """
     parser = argparse.ArgumentParser(description=__doc__)
 
-    parser.add_argument("--model_path",type=str,default="../experiments/cifar10_base/checkpoint/iteration_71955.ckpt-71955",help="pre-train best model")
-    parser.add_argument("--file_name",type=str,default="F:\\dataset\\cifar10\\train\\25295.png",help="test image to class")
+    parser.add_argument("--model_path",type=str,default="../experiments/best_model/v2/iteration_71955.ckpt-71955",help="pre-train best model")
+    parser.add_argument("--file_name",type=str,default="F:\\dataset\\cifar10\\train\\11093.png",help="test image to class")
     parser.add_argument(
         '-c', '--config',
         metavar='C',
@@ -66,9 +66,10 @@ def main(args,config):
         ## Input placeholder
         with tf.name_scope('input'):
             x = tf.placeholder(tf.float32, [None, config.im_shape[0], config.im_shape[1], 3])
+            is_training = tf.placeholder('bool', [])
 
         with tf.name_scope("models"):
-            model = SimpleModel(config,False)
+            model = SimpleModel(config,is_training,False)
             logits = model.build_model(x)
             prediction = tf.nn.softmax(logits)
 
@@ -76,7 +77,7 @@ def main(args,config):
 
     with tf.Session(graph=graph) as sess:
         model.saver.restore(sess,args.model_path)
-        pred = sess.run(prediction,feed_dict={x:img})
+        pred = sess.run(prediction,feed_dict={x:img,is_training: False})
 
         class_id = np.argmax(pred, 1)
         class_name = class_id2name.get(class_id[0])
