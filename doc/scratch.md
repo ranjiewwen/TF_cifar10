@@ -148,7 +148,7 @@ def image_crop(image):
  bn1 = batch_norm_wrapper(relu1,self.is_training,self.config.moving_ave_decay,self.config.UPDATE_OPS_COLLECTION)
 ```
 
-- exp5: increase network depth
+- exp5: add bn and increase network depth
 ``` 
         with tf.variable_scope("conv4"):
             conv4 = conv(pool3,256)
@@ -156,3 +156,16 @@ def image_crop(image):
             bn4 = batch_norm_wrapper(relu4, self.is_training,self.config.moving_ave_decay,self.config.UPDATE_OPS_COLLECTION)
         pool4 = maxpool("pool3",bn4)
 ```
+
+
+### experiments results:
+
+- tensorboard visual cross_entropy+regularization_losses.
+
+![](https://github.com/ranjiewwen/TF_cifar10/blob/master/doc/image/mdoel_loss.png)
+
+-  tensorboard visual val accuracy.
+
+![](https://github.com/ranjiewwen/TF_cifar10/blob/master/doc/image/model_acc.png)
+
+- we can see dropout get acc 83+%, weight decay get acc 84+%, image_crop augmentation get amazing acc 88+%, when add bn while train not stable, maybe not good adjust parameter, acc 88+%, when add one more conv4, training is bad. next will continue optimize this model.
