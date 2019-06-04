@@ -8,7 +8,8 @@
 - exp3: change piecewise_constant parameters.
 - exp4: use sgd optimize.
 
-```python
+```
+"lr": 0.001,
 def get_lr_strategy(config,global_step):
 
     if config.lr_plan == "exp_decay":
@@ -111,3 +112,47 @@ def parse_aug_data(filename):
 ![](https://github.com/ranjiewwen/TF_cifar10/blob/master/doc/image/aug_acc.png)
 
 - there we can see add data augmentation can increase val accuracy, when use image_whitening can speed up convergence. at last **val_accuracy achieve 81+%**.
+
+### model adjust
+
+- exp1: add dropout, train and test keep_prob is not same.
+```
+sess.run(train_step, feed_dict = {x:train_batch,y:label_batch,dropout_keep_prob: config.keep_prob})  
+
+val_acc = sess.run(accuracy,feed_dict={x:val_batch,y:val_label,dropout_keep_prob: 1.})
+
+```
+
+- exp2: add weight decay(conv and fc decay coef is same important)
+```
+def conv(input, out_channel,weight_decay = 0.0001, trainable=True):
+
+def fc(input, out_channel,weight_decay = 0.01,trainable=True):
+
+```
+
+- exp3: add image crop augmentation
+```
+def image_crop(image):
+
+    image = np.pad(image,[[4,4],[4,4],[0,0]],'constant')
+    left = np.random.randint(image.shape[0]-32+1)
+    top = np.random.randint(image.shape[1]-32+1)
+    ret_img = image[left:left+32,top:top+32,:]
+
+    return ret_img
+```
+
+- exp4: add batch normalization and drop dropout
+```markdown
+ bn1 = batch_norm_wrapper(relu1,self.is_training,self.config.moving_ave_decay,self.config.UPDATE_OPS_COLLECTION)
+```
+
+- exp5: increase network depth
+``` 
+        with tf.variable_scope("conv4"):
+            conv4 = conv(pool3,256)
+            relu4 = tf.nn.relu(conv4)
+            bn4 = batch_norm_wrapper(relu4, self.is_training,self.config.moving_ave_decay,self.config.UPDATE_OPS_COLLECTION)
+        pool4 = maxpool("pool3",bn4)
+```

@@ -36,6 +36,15 @@ def image_whitening(image):
 
     return white_image
 
+def image_crop(image):
+
+    image = np.pad(image,[[4,4],[4,4],[0,0]],'constant')
+    left = np.random.randint(image.shape[0]-32+1)
+    top = np.random.randint(image.shape[1]-32+1)
+    ret_img = image[left:left+32,top:top+32,:]
+
+    return ret_img
+
 def parse_data(filename):
 
     I = np.asarray(cv2.imread(filename))
@@ -55,6 +64,8 @@ def parse_aug_data(filename):
     # I -= mean
     I = image_whitening(I)
 
+    if np.random.random() < 0.5:
+        I = image_crop(I)
     if np.random.random() < 0.5 :
         I = cv2.flip(I,1)
     if np.random.random() < 0.5 :
@@ -64,6 +75,7 @@ def parse_aug_data(filename):
 
     return I
 
+# The CIFAR-10 dataset consists of 60000 32x32 colour images in 10 classes, with 6000 images per class. There are 50000 training images and 10000 test images.
 class Cifar10_DataLoader(DataLoaderBase):
 
     def __init__(self,data_file,is_training,config=None):

@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 """
-created by admin at  2019-05-29  in Whu.
+created by admin at  2019-06-04  in Whu.
 """
 
 import tensorflow as tf
 from src.datasets.cifar10_dataloader import Cifar10_DataLoader
-from src.models.simple_model import SimpleModel as TrainModel
+from src.models.model_v2 import SimpleModel as TrainModel
 from src.loss.cross_entropy import cross_entropy
 from src.metrics.acc_metric import get_accuracy
 from tools.utils import setup_logger
@@ -16,7 +16,6 @@ from config.config import process_config
 import numpy as np
 from datetime import datetime
 import time
-
 
 
 def main(config):
@@ -32,9 +31,10 @@ def main(config):
             x = tf.placeholder(tf.float32,[None,config.im_shape[0],config.im_shape[1],3])
             y = tf.placeholder(tf.float32,[None,config.num_classes])
             dropout_keep_prob = tf.placeholder(tf.float32)
+            is_training = tf.placeholder('bool', [])
 
         with tf.name_scope("models"):
-            model = TrainModel(config,True ,dropout_keep_prob = dropout_keep_prob)
+            model = TrainModel(config,is_training ,dropout_keep_prob = dropout_keep_prob)
             logits = model.build_model(x)
             prediction = tf.nn.softmax(logits)
 
@@ -48,9 +48,14 @@ def main(config):
             global_step = tf.Variable(0, trainable=False)  # global_step变量是不可训练的,参考：https://blog.csdn.net/xiaolifeidaoer/article/details/88218224
             learning_rate = get_lr_strategy(config,global_step)
             if config.optimize == "sgd":
-                train_step = tf.train.GradientDescentOptimizer(learning_rate).minimize(loss,global_step=global_step)
+                train_op = tf.train.GradientDescentOptimizer(learning_rate).minimize(loss,global_step=global_step)
             else:
-                train_step = tf.train.AdamOptimizer(learning_rate).minimize(loss,global_step=global_step)
+                train_op = tf.train.AdamOptimizer(learning_rate).minimize(loss,global_step=global_step)
+            ema = tf.train.ExponentialMovingAverage(config.moving_ave_decay)
+            tf.add_to_collection(config.UPDATE_OPS_COLLECTION, ema.apply([loss]))
+            batchnorm_updates = tf.get_collection(config.UPDATE_OPS_COLLECTION)
+            batchnorm_updates_op = tf.group(*batchnorm_updates)
+            train_step = tf.group(train_op, batchnorm_updates_op)
 
         tf.summary.scalar('learning_rate', learning_rate)
         tf.summary.scalar('global_step', global_step)
@@ -78,11 +83,11 @@ def main(config):
         logger.info("Strat training...")
         for step in range(config.max_iter):
             train_batch,label_batch = train_dataloader.next_batch()
-            sess.run(train_step, feed_dict = {x:train_batch,y:label_batch,dropout_keep_prob: config.keep_prob})
+            sess.run(train_step, feed_dict = {x:train_batch,y:label_batch,dropout_keep_prob: config.keep_prob,is_training: True})
 
             if step % config.trian_display_step == 0:
                 batch_loss,batch_acc,summary_str = sess.run([loss,accuracy,summary_op],
-                                                            feed_dict={x:train_batch,y:label_batch,dropout_keep_prob:1.0})
+                                                            feed_dict={x:train_batch,y:label_batch,dropout_keep_prob:1.0,is_training: False})
                 train_writer.add_summary(summary_str,step)
                 logger.info("step {} : Training Batch Loss = {:.4f}, Batch Accuracy = {:.4f}".format(step,batch_loss,batch_acc))
 
@@ -92,7 +97,7 @@ def main(config):
                 val_cnt = 0
                 for _ in range(val_step_per_epoch):
                     val_batch,val_label = val_dataloader.next_batch()
-                    val_acc = sess.run(accuracy,feed_dict={x:val_batch,y:val_label,dropout_keep_prob: 1.})
+                    val_acc = sess.run(accuracy,feed_dict={x:val_batch,y:val_label,dropout_keep_prob: 1.,is_training: False})
                     total_val_acc += val_acc
                     val_cnt += 1
                 mean_val_acc = total_val_acc/val_cnt
@@ -123,7 +128,6 @@ if __name__ == "__main__":
     # create logger info
     global logger
     logger = setup_logger("TF_cifar10", config.ckpt_dir,"train_cifar10_")
-    logger.info(config)
 
     main(config)
 

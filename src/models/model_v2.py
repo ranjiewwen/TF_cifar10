@@ -5,7 +5,7 @@ created by admin at  2019-05-19  in Whu.
 """
 
 from src.models.base_model import BaseModel
-from src.models.layers import conv,fc,maxpool,dropout
+from src.models.layers import conv,fc,maxpool,dropout,batch_norm_wrapper
 import tensorflow as tf
 
 class SimpleModel(BaseModel):
@@ -24,27 +24,36 @@ class SimpleModel(BaseModel):
         with tf.variable_scope("conv1"):
             conv1 = conv(input_image,64)
             relu1 = tf.nn.relu(conv1)
-        pool1 = maxpool("pool1",relu1)
+            bn1 = batch_norm_wrapper(relu1,self.is_training,self.config.moving_ave_decay,self.config.UPDATE_OPS_COLLECTION)
+        pool1 = maxpool("pool1",bn1)
 
         with tf.variable_scope("conv2"):
             conv2 = conv(pool1,128)
             relu2 = tf.nn.relu(conv2)
-        pool2 = maxpool("pool2",relu2)
+            bn2 = batch_norm_wrapper(relu2, self.is_training,self.config.moving_ave_decay,self.config.UPDATE_OPS_COLLECTION)
+        pool2 = maxpool("pool2",bn2)
 
         with tf.variable_scope("conv3"):
             conv3 = conv(pool2,256)
             relu3 = tf.nn.relu(conv3)
-        pool3 = maxpool("pool3",relu3)
+            bn3 = batch_norm_wrapper(relu3, self.is_training,self.config.moving_ave_decay,self.config.UPDATE_OPS_COLLECTION)
+        pool3 = maxpool("pool3",bn3)
 
         with tf.variable_scope('fc1'):
             fc1 = fc(pool3,256)
             fc1 = tf.nn.relu(fc1)
+            bn_fc = batch_norm_wrapper(fc1, self.is_training, self.config.moving_ave_decay,
+                                       self.config.UPDATE_OPS_COLLECTION)
 
-            if self.is_training:
-                fc1 = dropout(fc1,self.keep_prob)
+            # fc1 = tf.cond(self.is_training,
+            #               lambda :dropout(fc1,self.keep_prob),
+            #               lambda :fc1
+            #               )
+            # if self.is_training: # tensor
+            #     fc1 = dropout(fc1,self.keep_prob)
 
         with tf.variable_scope('fc2'):
-            out = fc(fc1,self.num_class)
+            out = fc(bn_fc,self.num_class)
 
         self.feature_map = {"conv1":conv1,"conv3":conv3,"pool1":pool1,"pool3":pool3}
         self.logits = out

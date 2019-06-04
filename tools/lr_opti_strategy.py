@@ -20,5 +20,5 @@ def get_lr_strategy(config,global_step):
     elif config.lr_plan == "piecewise":
         learning_rate = tf.train.piecewise_constant(global_step,
                                                     boundaries=[int(config.max_iter * 0.6), int(config.max_iter * 0.8)],
-                                                    values=[config.lr, config.lr * 0.1, config.lr * 0.01])
+                                                    values=[config.lr, config.lr * 0.2, config.lr * 0.01])
     return learning_rate
