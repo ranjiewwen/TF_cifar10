@@ -44,6 +44,9 @@
 - [cifar10-tensorflow](https://github.com/persistforever/cifar10-tensorflow)
 - [CIFAR10_mxnet](https://github.com/yinglang/CIFAR10_mxnet)
 - [models/tutorials/image/cifar10/](https://github.com/tensorflow/models/tree/master/tutorials/image/cifar10)
+- [pytorch-cifar](https://github.com/kuangliu/pytorch-cifar)
+- [AutoAugment](https://github.com/DeepVoltaire/AutoAugment)
+- [pytorch-auto-augment](https://github.com/4uiiurz1/pytorch-auto-augment)
 
 
 
