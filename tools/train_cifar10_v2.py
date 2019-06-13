@@ -128,6 +128,7 @@ if __name__ == "__main__":
     # create logger info
     global logger
     logger = setup_logger("TF_cifar10", config.ckpt_dir,"train_cifar10_")
+    logger.info(config)
 
     main(config)
 

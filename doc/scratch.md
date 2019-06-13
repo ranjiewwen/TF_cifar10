@@ -168,4 +168,4 @@ def image_crop(image):
 
 ![](https://github.com/ranjiewwen/TF_cifar10/blob/master/doc/image/model_acc.png)
 
-- we can see dropout get acc 83+%, weight decay get acc 84+%, image_crop augmentation get amazing acc 88+%, when add bn while train not stable, maybe not good adjust parameter, acc 88+%, when add one more conv4, training is bad. next will continue optimize this model.
+- we can see dropout get acc 83+%, weight decay get acc 84+%, image_crop augmentation get amazing acc 88+%, when add bn(exp4) while train not stable, maybe not good adjust parameter, acc 88+%, when add one more conv4(exp5), training is bad. next will continue optimize this model.

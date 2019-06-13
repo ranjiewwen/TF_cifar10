@@ -36,5 +36,5 @@ def process_config(json_file):
 ## input three method:
 
 #  args = parser.parse_args(): https://github.com/ranjiewwen/TF_RankIQA/blob/master/tools/train_clive.py
-#  get_config_from_json()
+#  get_config_from_json(): json or yaml file
 #  FLAGS = tf.app.flags.FLAGS: https://github.com/dgurkaynak/tensorflow-cnn-finetune/blob/master/alexnet/finetune.py

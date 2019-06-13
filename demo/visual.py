@@ -4,12 +4,6 @@
 created by admin at  2019-05-30  in Whu.
 """
 
-#!/usr/bin/env python
-# -*- coding:utf-8 -*-
-"""
-created by admin at  2019-05-27  in Whu.
-"""
-
 import matplotlib.pyplot as plt
 import tensorflow as tf
 import numpy as np
@@ -99,7 +93,7 @@ def main(args,config):
         num_channel = conv1_feat.shape[3]
 
         # https://stackoverflow.com/questions/43075709/how-to-create-subplot-using-matplotlib-in-python
-        fig , axes = plt.subplots(int(num_channel/16),16)
+        fig, axes = plt.subplots(int(num_channel / 16), 16)
         for row in range(int(num_channel / 16)):
             for col in range(16):
                 feat = np.squeeze(conv1_feat[:,:,:,row*16+col]) # np.squeeze() 可以直接进行压缩维度，

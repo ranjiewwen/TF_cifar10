@@ -21,23 +21,41 @@ class SimpleModel(BaseModel):
 
     def build_model(self,input_image):
 
-        with tf.variable_scope("conv1"):
+        with tf.variable_scope("conv1_1"):
             conv1 = conv(input_image,64)
+            relu1 = tf.nn.relu(conv1)
+
+        with tf.variable_scope("conv1_2"):
+            conv1 = conv(relu1,64)
             relu1 = tf.nn.relu(conv1)
         pool1 = maxpool("pool1",relu1)
 
-        with tf.variable_scope("conv2"):
+        with tf.variable_scope("conv2_1"):
             conv2 = conv(pool1,128)
+            relu2 = tf.nn.relu(conv2)
+        with tf.variable_scope("conv2_2"):
+            conv2 = conv(relu2,128)
             relu2 = tf.nn.relu(conv2)
         pool2 = maxpool("pool2",relu2)
 
-        with tf.variable_scope("conv3"):
+        with tf.variable_scope("conv3_1"):
             conv3 = conv(pool2,256)
+            relu3 = tf.nn.relu(conv3)
+        with tf.variable_scope("conv3_2"):
+            conv3 = conv(relu3,256)
             relu3 = tf.nn.relu(conv3)
         pool3 = maxpool("pool3",relu3)
 
+        with tf.variable_scope("conv4_1"):
+            conv4 = conv(pool3,256)
+            relu4 = tf.nn.relu(conv4)
+        with tf.variable_scope("conv4_2"):
+            conv4 = conv(relu4,256)
+            relu4 = tf.nn.relu(conv4)
+        pool4 = maxpool("pool3",relu4)
+
         with tf.variable_scope('fc1'):
-            fc1 = fc(pool3,256)
+            fc1 = fc(pool4,256)
             fc1 = tf.nn.relu(fc1)
 
             if self.is_training:

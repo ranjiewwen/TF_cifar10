@@ -1,5 +1,5 @@
 {
-  "exp_name": "cifar10_res_model",
+  "exp_name": "cifar10_base",
   "lr": 0.001,
   "lr_plan":"piecewise",
   "optimize":"adam",
