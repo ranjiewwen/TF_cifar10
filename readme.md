@@ -14,7 +14,9 @@
 - **four step:** you should finish trian scripts `tools/train_cifar10.py`, in this process you will finish loss function  and metric funtion：`src/loss/cross_entropy.py` and `src/metrics/acc_metric.py`; in this scripts `tools/train_cifar10.py`, we will first create graph and then run session. at the same time, we will record train models and use tensorboard to visual loss and accuracy in `experiments/chekpoint` and `experiment/summary` folder.
 - **five step:** you can run train scripts:`tools/train_cifar10.py`.
 - **six step:** when you get train model, you can predict image and get class name in `demo/prdict.py`.
+![](https://github.com/ranjiewwen/TF_cifar10/blob/master/doc/image/2808.png)
 - **seven step:** you can also get some extra information from `demo/visual.py`, such as weights or visual feature map.
+![](https://github.com/ranjiewwen/TF_cifar10/blob/master/doc/image/featuremap.png)
 - **other:** you can fimilar how to use some tool function in `tools/utils.py`.
 
 ## The optimization process
