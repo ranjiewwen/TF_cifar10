@@ -6,7 +6,7 @@ created by admin at  2019-06-04  in Whu.
 
 import tensorflow as tf
 from src.datasets.cifar10_dataloader import Cifar10_DataLoader
-from src.models.model_v2 import SimpleModel as TrainModel
+from src.models.resnet import ResNetModel as TrainModel
 from src.loss.cross_entropy import cross_entropy
 from src.metrics.acc_metric import get_accuracy
 from tools.utils import setup_logger
@@ -34,7 +34,7 @@ def main(config):
             is_training = tf.placeholder('bool', [])
 
         with tf.name_scope("models"):
-            model = TrainModel(config,is_training ,dropout_keep_prob = dropout_keep_prob)
+            model = TrainModel(config,is_training)
             logits = model.build_model(x)
             prediction = tf.nn.softmax(logits)
 

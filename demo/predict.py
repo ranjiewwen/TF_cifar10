@@ -28,7 +28,7 @@ def process_args():
     parser = argparse.ArgumentParser(description=__doc__)
 
     parser.add_argument("--model_path",type=str,default="../experiments/cifar10_base/checkpoint/iteration_71955.ckpt-71955",help="pre-train best model")
-    parser.add_argument("--file_name",type=str,default="F:\\dataset\\cifar10\\train\\25295.png",help="test image to class")
+    parser.add_argument("--file_name",type=str,default="F:\\dataset\\cifar10\\train\\2808.png",help="test image to class")
     parser.add_argument(
         '-c', '--config',
         metavar='C',

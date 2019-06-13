@@ -1,6 +1,6 @@
 {
-  "exp_name": "cifar10_base",
-  "lr": 0.001,
+  "exp_name": "cifar10_res_model",
+  "lr": 0.01,
   "lr_plan":"piecewise",
   "optimize":"adam",
   "conv_weight_decay": 0.00004,
@@ -14,6 +14,6 @@
   "max_to_keep":5,
   "keep_prob":0.5,
   "trian_display_step":100,
-  "train_txt":"F:\\dataset\\cifar10\\train.txt",
-  "val_txt":"F:\\dataset\\cifar10\\val.txt"
+  "train_txt":"E:\\datasets\\cifar10\\train.txt",
+  "val_txt":"E:\\datasets\\cifar10\\val.txt"
 }

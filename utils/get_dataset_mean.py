@@ -11,7 +11,7 @@ import os
 import numpy as np
 import cv2
 
-image_dir = "F:\\dataset\\cifar10\\train\\train\\"
+image_dir = "E:\\datasets\\train\\"
 image_list = os.listdir(image_dir)
 r_mean = []
 g_mean = []

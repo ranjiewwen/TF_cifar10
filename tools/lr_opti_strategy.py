@@ -8,6 +8,8 @@ import tensorflow as tf
 
 
 ## lr: https://blog.csdn.net/akadiao/article/details/79560731
+
+## "lr": 0.001,
 def get_lr_strategy(config,global_step):
 
     if config.lr_plan == "exp_decay":
