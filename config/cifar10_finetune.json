@@ -1,19 +1,20 @@
 {
   "exp_name": "cifar10_finetune",
-  "lr": 0.001,
+  "lr": 0.0001,
   "lr_plan":"piecewise",
   "optimize":"adam",
   "conv_weight_decay": 0.00004,
   "moving_ave_decay":0.9997,
   "UPDATE_OPS_COLLECTION":"resnet_update_ops",
   "num_epochs": 60,
-  "max_iter":72000,
+  "max_iter":48000,
   "batch_size": 128,
   "num_classes":10,
   "im_shape":[32,32],
   "max_to_keep":5,
   "keep_prob":0.5,
   "trian_display_step":100,
+  "train_layers":"fc",
   "train_txt":"E:\\datasets\\cifar10\\train.txt",
   "val_txt":"E:\\datasets\\cifar10\\val.txt"
 }

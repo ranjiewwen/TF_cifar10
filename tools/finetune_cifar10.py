@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 """
-created by admin at  2019-06-04  in Whu.
+created by admin at  2019-06-18  in Whu.
 """
 
 import tensorflow as tf
 from src.datasets.cifar10_dataloader import Cifar10_DataLoader
-from src.models.model_v2 import SimpleModel as TrainModel
+from src.models.resnet import ResNetModel as TrainModel
 from src.loss.cross_entropy import cross_entropy
 from src.metrics.acc_metric import get_accuracy
 from tools.utils import setup_logger
@@ -24,7 +24,6 @@ def main(config):
         ## import data
         train_dataloader = Cifar10_DataLoader(config.train_txt, True, config)
         val_dataloader = Cifar10_DataLoader(config.val_txt, False, config)
-
 
         ## Input placeholder
         with tf.name_scope('input'):
@@ -78,7 +77,15 @@ def main(config):
 
         sess.run(tf.global_variables_initializer())
         train_writer.add_graph(sess.graph)
-        model.load(sess) # load pre_train model
+        
+        latest_checkpoint = tf.train.latest_checkpoint(config.ckpt_dir)
+        if latest_checkpoint:
+            model.load(sess) # load pre_train model
+        else:
+            # Load the pretrained weights
+            logger.info("------Load the pretrained weights")
+            weights_path = "../config/ResNet-L50.npy"
+            model.load_original_weights(sess,weights_path,skip_layers=config.train_layers)
 
         logger.info("Strat training...")
         for step in range(config.max_iter):
@@ -117,6 +124,7 @@ if __name__ == "__main__":
     # then process the json configuration file
     try:
         args = get_args()
+        args.config = "../config/cifar10_finetune.json"
         config = process_config(args.config)
 
     except:

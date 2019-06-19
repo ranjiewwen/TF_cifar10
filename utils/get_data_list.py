@@ -63,7 +63,7 @@ def get_train_valid(data_dir, train_dir, labels, idx_label, valid_ratio):
 if __name__=="__main__":
     csv_file = "trainLabels.csv"
     train_dir = "train"
-    data_dir = "E:\\datasets"
+    data_dir = "E:\\datasets\\cifar10"
 
     read_csv_to_txt(csv_file,data_dir)
 
